@@ -47,4 +47,5 @@ public class WxMenuManageController {
         wxService.getMenuService().menuCreate(wxMenu);
         return R.ok();
     }
+
 }
