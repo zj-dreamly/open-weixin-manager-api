@@ -8,10 +8,8 @@ import me.chanjar.weixin.common.bean.menu.WxMenu;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.menu.WxMpMenu;
+import me.chanjar.weixin.open.api.WxOpenComponentService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -24,18 +22,16 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Api(tags = {"公众号菜单-管理后台"})
 public class WxMenuManageController {
-    Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final WxMpService wxService;
-    @Autowired
-    private WxMpService wxMpService;
+
+    private final WxOpenComponentService wxOpenComponentService;
 
     /**
      * 获取公众号菜单
      */
     @GetMapping("/getMenu")
     @ApiOperation(value = "获取公众号菜单")
-    public R getMenu(@CookieValue String appid) throws WxErrorException {
-        wxMpService.switchoverTo(appid);
+    public R getMenu(@RequestParam String appid) throws WxErrorException {
+        final WxMpService wxService = wxOpenComponentService.getWxMpServiceByAppid(appid);
         WxMpMenu wxMpMenu = wxService.getMenuService().menuGet();
         return R.ok().put(wxMpMenu);
     }
@@ -46,8 +42,8 @@ public class WxMenuManageController {
     @PostMapping("/updateMenu")
     @RequiresPermissions("wx:menu:save")
     @ApiOperation(value = "创建、更新菜单")
-    public R updateMenu(@CookieValue String appid,@RequestBody WxMenu wxMenu) throws WxErrorException {
-        wxMpService.switchoverTo(appid);
+    public R updateMenu(@RequestParam String appid, @RequestBody WxMenu wxMenu) throws WxErrorException {
+        final WxMpService wxService = wxOpenComponentService.getWxMpServiceByAppid(appid);
         wxService.getMenuService().menuCreate(wxMenu);
         return R.ok();
     }
