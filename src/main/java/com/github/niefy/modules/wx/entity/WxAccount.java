@@ -52,6 +52,10 @@ public class WxAccount implements Serializable {
 	 * aesKey
 	 */
 	private String aesKey;
+    /**
+     * refreshToken
+     */
+    private String refreshToken;
 
 	public WxMpDefaultConfigImpl toWxMpConfigStorage(){
 		WxMpDefaultConfigImpl configStorage = new WxMpDefaultConfigImpl();
