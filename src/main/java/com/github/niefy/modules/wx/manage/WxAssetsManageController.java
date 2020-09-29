@@ -82,10 +82,6 @@ public class WxAssetsManageController {
 
     /**
      * 分页获取图文素材列表
-     *
-     * @param page
-     * @return
-     * @throws WxErrorException
      */
     @GetMapping("/materialNewsBatchGet")
     @RequiresPermissions("wx:wxassets:list")

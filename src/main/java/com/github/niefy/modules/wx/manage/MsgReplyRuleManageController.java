@@ -1,20 +1,17 @@
 package com.github.niefy.modules.wx.manage;
 
-import java.util.Arrays;
-import java.util.Map;
-
+import com.github.niefy.common.utils.PageUtils;
+import com.github.niefy.common.utils.R;
+import com.github.niefy.modules.wx.entity.MsgReplyRule;
 import com.github.niefy.modules.wx.service.MsgReplyRuleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import me.chanjar.weixin.mp.api.WxMpService;
+import lombok.RequiredArgsConstructor;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.github.niefy.modules.wx.entity.MsgReplyRule;
-import com.github.niefy.common.utils.PageUtils;
-import com.github.niefy.common.utils.R;
-
+import java.util.Arrays;
+import java.util.Map;
 
 /**
  * 自动回复规则
@@ -26,11 +23,10 @@ import com.github.niefy.common.utils.R;
 @RestController
 @RequestMapping("/manage/msgReplyRule")
 @Api(tags = {"自动回复规则-管理后台"})
+@RequiredArgsConstructor
 public class MsgReplyRuleManageController {
-    @Autowired
-    private MsgReplyRuleService msgReplyRuleService;
-    @Autowired
-    private WxMpService wxMpService;
+
+    private final MsgReplyRuleService msgReplyRuleService;
 
     /**
      * 列表
@@ -38,13 +34,11 @@ public class MsgReplyRuleManageController {
     @GetMapping("/list")
     @RequiresPermissions("wx:msgreplyrule:list")
     @ApiOperation(value = "列表")
-    public R list(@CookieValue String appid,@RequestParam Map<String, Object> params) {
-        params.put("appid",appid);
+    public R list(@RequestParam String appid, @RequestParam Map<String, Object> params) {
+        params.put("appid", appid);
         PageUtils page = msgReplyRuleService.queryPage(params);
-
         return R.ok().put("page", page);
     }
-
 
     /**
      * 信息
@@ -54,7 +48,6 @@ public class MsgReplyRuleManageController {
     @ApiOperation(value = "详情")
     public R info(@PathVariable("ruleId") Integer ruleId) {
         MsgReplyRule msgReplyRule = msgReplyRuleService.getById(ruleId);
-
         return R.ok().put("msgReplyRule", msgReplyRule);
     }
 
@@ -66,7 +59,6 @@ public class MsgReplyRuleManageController {
     @ApiOperation(value = "保存")
     public R save(@RequestBody MsgReplyRule msgReplyRule) {
         msgReplyRuleService.save(msgReplyRule);
-
         return R.ok();
     }
 
@@ -78,7 +70,6 @@ public class MsgReplyRuleManageController {
     @ApiOperation(value = "修改")
     public R update(@RequestBody MsgReplyRule msgReplyRule) {
         msgReplyRuleService.updateById(msgReplyRule);
-
         return R.ok();
     }
 
@@ -90,7 +81,6 @@ public class MsgReplyRuleManageController {
     @ApiOperation(value = "删除")
     public R delete(@RequestBody Integer[] ruleIds) {
         msgReplyRuleService.removeByIds(Arrays.asList(ruleIds));
-
         return R.ok();
     }
 

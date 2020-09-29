@@ -71,7 +71,6 @@ public class WxAssetsServiceImpl implements WxAssetsService {
 
     /**
      * 更新图文素材中的某篇文章
-     * @param form
      */
     @Override
     @CacheEvict(allEntries = true)
