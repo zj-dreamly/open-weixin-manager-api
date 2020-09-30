@@ -10,12 +10,11 @@ import com.github.niefy.common.utils.Query;
 import com.github.niefy.modules.wx.dao.MsgTemplateMapper;
 import com.github.niefy.modules.wx.entity.MsgTemplate;
 import com.github.niefy.modules.wx.service.MsgTemplateService;
+import com.github.niefy.modules.wx.util.WxMpServiceUtil;
 import com.github.zj.dreamly.tool.util.StreamUtils;
 import lombok.AllArgsConstructor;
 import me.chanjar.weixin.common.error.WxErrorException;
-import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -31,7 +30,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class MsgTemplateServiceImpl extends ServiceImpl<MsgTemplateMapper, MsgTemplate> implements MsgTemplateService {
 
-    private final WxMpService wxService;
+    private final WxMpServiceUtil wxMpServiceUtil;
 
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
@@ -60,8 +59,11 @@ public class MsgTemplateServiceImpl extends ServiceImpl<MsgTemplateMapper, MsgTe
 
     @Override
     public void syncWxTemplate(String appid) throws WxErrorException {
-        List<WxMpTemplate> wxMpTemplateList = wxService.getTemplateMsgService().getAllPrivateTemplate();
-        List<MsgTemplate> templates = wxMpTemplateList.stream().map(item -> new MsgTemplate(item, appid)).collect(Collectors.toList());
+        List<WxMpTemplate> wxMpTemplateList = wxMpServiceUtil.switchoverTo(appid)
+                .getTemplateMsgService().getAllPrivateTemplate();
+
+        List<MsgTemplate> templates = wxMpTemplateList.stream()
+                .map(item -> new MsgTemplate(item, appid)).collect(Collectors.toList());
 
         final List<MsgTemplate> list = this.list(Wrappers.<MsgTemplate>lambdaQuery().eq(MsgTemplate::getAppid, appid));
 

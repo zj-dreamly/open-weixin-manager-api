@@ -8,6 +8,7 @@ import com.github.niefy.modules.wx.form.TemplateMsgBatchForm;
 import com.github.niefy.modules.wx.service.TemplateMsgLogService;
 import com.github.niefy.modules.wx.service.TemplateMsgService;
 import com.github.niefy.modules.wx.service.WxUserService;
+import com.github.niefy.modules.wx.util.WxMpServiceUtil;
 import lombok.RequiredArgsConstructor;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -32,7 +33,7 @@ public class TemplateMsgServiceImpl implements TemplateMsgService {
 
     private final TemplateMsgLogService templateMsgLogService;
 
-    private final WxMpService wxService;
+    private final WxMpServiceUtil wxMpServiceUtil;
 
     private final WxUserService wxUserService;
 
@@ -45,8 +46,8 @@ public class TemplateMsgServiceImpl implements TemplateMsgService {
         TaskExcutor.submit(() -> {
             String result;
             try {
-                wxService.switchover(appid);
-                result = wxService.getTemplateMsgService().sendTemplateMsg(msg);
+                final WxMpService wxMpService = wxMpServiceUtil.switchoverTo(appid);
+                result = wxMpService.getTemplateMsgService().sendTemplateMsg(msg);
             } catch (WxErrorException e) {
                 result = e.getMessage();
             }

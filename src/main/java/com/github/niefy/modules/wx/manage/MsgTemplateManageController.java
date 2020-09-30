@@ -110,7 +110,6 @@ public class MsgTemplateManageController {
     @RequiresPermissions("wx:msgtemplate:save")
     @ApiOperation(value = "同步公众号模板")
     public R syncWxTemplate(@RequestParam String appid) throws WxErrorException {
-        this.wxMpServiceUtil.switchoverTo(appid);
         msgTemplateService.syncWxTemplate(appid);
         return R.ok();
     }
@@ -123,7 +122,6 @@ public class MsgTemplateManageController {
     @RequiresPermissions("wx:msgtemplate:save")
     @ApiOperation(value = "批量向用户发送模板消息", notes = "将消息发送给数据库中所有符合筛选条件的用户")
     public R sendMsgBatch(@RequestParam String appid, @RequestBody TemplateMsgBatchForm form) {
-        this.wxMpServiceUtil.switchoverTo(appid);
         templateMsgService.sendMsgBatch(form, appid);
         return R.ok();
     }
