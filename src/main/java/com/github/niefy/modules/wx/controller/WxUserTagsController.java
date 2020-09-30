@@ -30,15 +30,15 @@ public class WxUserTagsController {
 
     @GetMapping("/userTags")
     @ApiOperation(value = "当前用户的标签")
-    public R userTags(@CookieValue String appid,@CookieValue String openid){
-        if(openid==null){
+    public R userTags(@CookieValue String appid, @CookieValue String openid) {
+        if (openid == null) {
             return R.error("none_openid");
         }
         this.wxMpService.switchoverTo(appid);
         WxUser wxUser = wxUserService.getById(openid);
-        if(wxUser==null){
-            wxUser=wxUserService.refreshUserInfo(openid,appid);
-            if(wxUser==null) {
+        if (wxUser == null) {
+            wxUser = wxUserService.refreshUserInfo(openid, appid);
+            if (wxUser == null) {
                 return R.error("not_subscribed");
             }
         }
@@ -47,15 +47,16 @@ public class WxUserTagsController {
 
     @PostMapping("/tagging")
     @ApiOperation(value = "给用户绑定标签")
-    public R tagging(@CookieValue String appid,@CookieValue String openid , @RequestBody WxUserTaggingForm form) {
+    public R tagging(@CookieValue String appid, @CookieValue String openid, @RequestBody WxUserTaggingForm form) {
         this.wxMpService.switchoverTo(appid);
         try {
-            wxUserTagsService.tagging(form.getTagid(),openid);
-        }catch (WxErrorException e){
+            wxUserTagsService.tagging(appid, form.getTagid(), openid);
+        } catch (WxErrorException e) {
             WxError error = e.getError();
-            if(50005==error.getErrorCode()){//未关注公众号
+            //未关注公众号
+            if (50005 == error.getErrorCode()) {
                 return R.error("not_subscribed");
-            }else {
+            } else {
                 return R.error(error.getErrorMsg());
             }
         }
@@ -64,9 +65,9 @@ public class WxUserTagsController {
 
     @PostMapping("/untagging")
     @ApiOperation(value = "解绑标签")
-    public R untagging(@CookieValue String appid,@CookieValue String openid , @RequestBody WxUserTaggingForm form) throws WxErrorException {
+    public R untagging(@CookieValue String appid, @CookieValue String openid, @RequestBody WxUserTaggingForm form) throws WxErrorException {
         this.wxMpService.switchoverTo(appid);
-        wxUserTagsService.untagging(form.getTagid(),openid);
+        wxUserTagsService.untagging(appid, form.getTagid(), openid);
         return R.ok();
     }
 }

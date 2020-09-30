@@ -5,7 +5,6 @@ import com.github.niefy.common.utils.R;
 import com.github.niefy.modules.wx.entity.WxQrCode;
 import com.github.niefy.modules.wx.form.WxQrCodeForm;
 import com.github.niefy.modules.wx.service.WxQrCodeService;
-import com.github.niefy.modules.wx.util.WxMpServiceUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +30,6 @@ public class WxQrCodeManageController {
 
     private final WxQrCodeService wxQrCodeService;
 
-    private final WxMpServiceUtil wxMpServiceUtil;
-
     /**
      * 创建带参二维码ticket
      */
@@ -40,7 +37,6 @@ public class WxQrCodeManageController {
     @RequiresPermissions("wx:wxqrcode:save")
     @ApiOperation(value = "创建带参二维码ticket", notes = "ticket可以换取二维码图片")
     public R createTicket(@RequestParam String appid, @RequestBody WxQrCodeForm form) throws WxErrorException {
-        wxMpServiceUtil.switchoverTo(appid);
         WxMpQrCodeTicket ticket = wxQrCodeService.createQrCode(appid, form);
         return R.ok().put(ticket);
     }
