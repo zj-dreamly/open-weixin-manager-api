@@ -39,7 +39,6 @@ public class WxMsgServiceImpl extends ServiceImpl<WxMsgMapper, WxMsg> implements
 
     /**
      * 记录msg，异步入库
-     * @param msg
      */
     @Override
     @Async

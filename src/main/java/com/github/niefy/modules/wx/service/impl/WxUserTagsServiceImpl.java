@@ -14,10 +14,14 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.List;
 
+/**
+ * @author zj-dreamly
+ */
 @Service
 @CacheConfig(cacheNames = {"wxUserTagsServiceCache"})
 @Slf4j
 public class WxUserTagsServiceImpl implements WxUserTagsService {
+
     @Resource
     private WxMpServiceUtil wxMpServiceUtil;
 

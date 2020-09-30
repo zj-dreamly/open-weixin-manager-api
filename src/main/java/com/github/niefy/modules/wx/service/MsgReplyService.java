@@ -17,7 +17,7 @@ public interface MsgReplyService {
      * 根据规则配置通过微信客服消息接口自动回复消息
      *
      *
-     * @param appid
+     * @param appid appid
      * @param exactMatch 是否精确匹配
      * @param toUser     用户openid
      * @param keywords   匹配关键词
