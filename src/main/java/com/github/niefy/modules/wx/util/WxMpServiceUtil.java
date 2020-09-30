@@ -32,9 +32,9 @@ public class WxMpServiceUtil {
             throw new RuntimeException("公众号[" + appid + "]数据不存在，请核实");
         }
 
-        if (wxAccount.getAuthorizeType().equals(MpAuthorizeType.OPEN.name())){
+        if (wxAccount.getAuthorizeType().equals(MpAuthorizeType.OPEN.name())) {
             return wxOpenComponentService.getWxMpServiceByAppid(appid);
-        }else {
+        } else {
             return wxMpService.switchoverTo(appid);
         }
     }

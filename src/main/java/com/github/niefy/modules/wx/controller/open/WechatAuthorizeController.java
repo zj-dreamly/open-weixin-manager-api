@@ -85,7 +85,7 @@ public class WechatAuthorizeController {
                 newWxAccount.setRefreshToken(queryAuthResult.getAuthorizationInfo().getAuthorizerRefreshToken());
                 newWxAccount.setAuthorizeType(MpAuthorizeType.OPEN.name());
 
-                wxAccountService.save(newWxAccount);
+                wxAccountService.getBaseMapper().insert(newWxAccount);
             } else {
                 wxAccount.setRefreshToken(queryAuthResult.getAuthorizationInfo().getAuthorizerRefreshToken());
                 wxAccountService.updateById(wxAccount);

@@ -21,6 +21,9 @@ import com.github.niefy.common.utils.Query;
 import org.springframework.util.StringUtils;
 
 
+/**
+ * @author zj-dreamly
+ */
 @Service("wxQrCodeService")
 @RequiredArgsConstructor
 public class WxQrCodeServiceImpl extends ServiceImpl<WxQrCodeMapper, WxQrCode> implements WxQrCodeService {
@@ -42,16 +45,12 @@ public class WxQrCodeServiceImpl extends ServiceImpl<WxQrCodeMapper, WxQrCode> i
 
     /**
      * 创建公众号带参二维码
-     *
-     *
-     * @param appid
-     * @param form
-     * @return
      */
     @Override
     public WxMpQrCodeTicket createQrCode(String appid, WxQrCodeForm form) throws WxErrorException {
         WxMpQrCodeTicket ticket;
-        if (form.getIsTemp()) {//创建临时二维码
+        if (form.getIsTemp()) {
+            //创建临时二维码
             ticket = wxService.getQrcodeService().qrCodeCreateTmpTicket(form.getSceneStr(), form.getExpireSeconds());
         } else {//创建永久二维码
             ticket = wxService.getQrcodeService().qrCodeCreateLastTicket(form.getSceneStr());

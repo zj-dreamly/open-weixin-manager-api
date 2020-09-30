@@ -26,15 +26,11 @@ public interface MsgTemplateService extends IService<MsgTemplate> {
 
     /**
      * 通过模板名称查询
-     *
-     * @param name
-     * @return
      */
     MsgTemplate selectByName(String name);
 
     /**
      * 同步公众号已添加的消息模板
-     * @throws WxErrorException
      */
     void syncWxTemplate(String appid) throws WxErrorException;
 }
