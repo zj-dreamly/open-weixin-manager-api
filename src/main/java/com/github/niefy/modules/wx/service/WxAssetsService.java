@@ -10,8 +10,8 @@ import java.util.List;
 public interface WxAssetsService {
     /**
      *  获取素材总数
-     * @return
-     * @throws WxErrorException
+     * @return WxMpMaterialCountResult
+     * @throws WxErrorException exception
      */
     WxMpMaterialCountResult materialCount() throws WxErrorException;
 

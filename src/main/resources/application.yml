@@ -53,8 +53,4 @@ mybatis-plus:
         jdbc-type-for-null: 'null'
 wechat:
   open:
-    componentAppId: xxx
-    componentSecret: xxx
-    componentToken: xxx
-    componentAesKey: xxx
     wechatOpenAuthorizeUrl: http://z5os29qr.xiaomy.net
