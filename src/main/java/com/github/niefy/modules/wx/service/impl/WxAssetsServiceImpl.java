@@ -2,6 +2,7 @@ package com.github.niefy.modules.wx.service.impl;
 
 import com.github.niefy.modules.wx.dto.PageSizeConstant;
 import com.github.niefy.modules.wx.service.WxAssetsService;
+import com.github.niefy.modules.wx.util.WxMpServiceUtil;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.error.WxErrorException;
@@ -26,28 +27,30 @@ import java.util.Objects;
 public class WxAssetsServiceImpl implements WxAssetsService {
     @Autowired
     WxMpService wxMpService;
+    @Autowired
+    WxMpServiceUtil wxMpServiceUtil;
 
     @Override
     @Cacheable(key = "methodName")
-    public WxMpMaterialCountResult materialCount() throws WxErrorException {
+    public WxMpMaterialCountResult materialCount(String appid) throws WxErrorException {
         log.info("从API获取素材总量");
-        return wxMpService.getMaterialService().materialCount();
+        return wxMpServiceUtil.switchoverTo(appid).getMaterialService().materialCount();
     }
 
     @Override
     @Cacheable(key = "methodName + #mediaId")
-    public WxMpMaterialNews materialNewsInfo(String mediaId) throws WxErrorException {
+    public WxMpMaterialNews materialNewsInfo(String appid, String mediaId) throws WxErrorException {
         log.info("从API获取图文素材详情,mediaId={}", mediaId);
-        return wxMpService.getMaterialService().materialNewsInfo(mediaId);
+        return wxMpServiceUtil.switchoverTo(appid).getMaterialService().materialNewsInfo(mediaId);
     }
 
     @Override
     @Cacheable(key = "methodName + #type + #page")
-    public WxMpMaterialFileBatchGetResult materialFileBatchGet(String type, int page) throws WxErrorException {
+    public WxMpMaterialFileBatchGetResult materialFileBatchGet(String appid, String type, int page) throws WxErrorException {
         log.info("从API获取媒体素材列表,type={},page={}", type, page);
         final int pageSize = PageSizeConstant.PAGE_SIZE_SMALL;
         int offset = (page - 1) * pageSize;
-        return wxMpService.getMaterialService().materialFileBatchGet(type, offset, pageSize);
+        return wxMpServiceUtil.switchoverTo(appid).getMaterialService().materialFileBatchGet(type, offset, pageSize);
     }
 
     @Cacheable(key = "methodName + #page")
