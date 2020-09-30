@@ -39,6 +39,10 @@ public class WxAccount implements Serializable {
 	 * 认证状态
 	 */
 	private boolean verified;
+    /**
+     * authorizeType{@link com.github.niefy.modules.wx.enums.MpAuthorizeType}
+     */
+    private String authorizeType;
 	/**
 	 * appsecret
 	 */

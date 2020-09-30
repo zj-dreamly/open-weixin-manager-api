@@ -1,13 +1,13 @@
 # Tomcat
 server:
     tomcat:
-        uri-encoding: UTF-8
-        max-threads: 1000
-        min-spare-threads: 30
-    port: 8088
-    connection-timeout: 5000ms
-    servlet:
-        context-path: /wx
+      uri-encoding: UTF-8
+      threads:
+        max: 1000
+        min-spare: 30
+    port: 80
+#    servlet:
+#        context-path: /wx
 
 debug: false
 
@@ -51,17 +51,10 @@ mybatis-plus:
         cache-enabled: true
         call-setters-on-nulls: true
         jdbc-type-for-null: 'null'
-
-renren:
-    # APP模块，是通过jwt认证的，如果要使用APP模块，则需要修改【加密秘钥】
-    jwt:
-        # 加密秘钥
-        secret: kF3`eF0|bD0!eA1#gE0!eE3_hD0@kJ0#[niefy@qq.com]
-        # token有效时长，7天，单位秒
-        expire: 604800
-        header: token
-
-wx:
-    mp:
-        # 自动回复消息发送间隔（毫秒），适当增加间隔可提升用户体验
-        autoReplyInterval: 1000
+wechat:
+  open:
+    componentAppId: xxx
+    componentSecret: xxx
+    componentToken: xxx
+    componentAesKey: xxx
+    wechatOpenAuthorizeUrl: http://z5os29qr.xiaomy.net

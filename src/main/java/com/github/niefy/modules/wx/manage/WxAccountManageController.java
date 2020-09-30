@@ -35,7 +35,6 @@ public class WxAccountManageController {
     @ApiOperation(value = "列表")
     public R list(){
         List<WxAccount> list = wxAccountService.list();
-
         return R.ok().put("list", list);
     }
 
@@ -48,7 +47,6 @@ public class WxAccountManageController {
     @ApiOperation(value = "详情")
     public R info(@PathVariable("id") String appid){
 		WxAccount wxAccount = wxAccountService.getById(appid);
-
         return R.ok().put("wxAccount", wxAccount);
     }
 
@@ -60,7 +58,6 @@ public class WxAccountManageController {
     @ApiOperation(value = "保存")
     public R save(@RequestBody WxAccount wxAccount){
 		wxAccountService.save(wxAccount);
-
         return R.ok();
     }
 
@@ -72,7 +69,6 @@ public class WxAccountManageController {
     @ApiOperation(value = "删除")
     public R delete(@RequestBody String[] appids){
 		wxAccountService.removeByIds(Arrays.asList(appids));
-
         return R.ok();
     }
 

@@ -1,19 +1,23 @@
 package com.github.niefy.modules.wx.controller.open;
 
-import com.baomidou.mybatisplus.extension.api.R;
 import com.github.niefy.modules.wx.config.open.WechatOpenProperties;
+import com.github.niefy.modules.wx.entity.WxAccount;
+import com.github.niefy.modules.wx.enums.MpAuthorizeType;
+import com.github.niefy.modules.wx.service.WxAccountService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.open.api.WxOpenComponentService;
+import me.chanjar.weixin.open.bean.result.WxOpenAuthorizerInfoResult;
 import me.chanjar.weixin.open.bean.result.WxOpenQueryAuthResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.Objects;
 
 /**
  * @author: 苍海之南
@@ -32,12 +36,21 @@ public class WechatAuthorizeController {
 
     private final WxOpenComponentService wxOpenComponentService;
 
+    private final WxAccountService wxAccountService;
+
+    @GetMapping("/show")
+    @ResponseBody
+    public String gotoPreAuthUrlShow(){
+        return "<a href='do'>点击前往微信开放平台授权</a>";
+    }
+
     /**
      * <h2>获取微信公众号授权链接</h2>
      */
-    @GetMapping()
+    @GetMapping("/do")
+    @SneakyThrows
     @ApiOperation(value = "获取授权页面链接", notes = "此链接只能由微信开放平台配置的授权发起域名跳转")
-    public R<String> getAuthUrl() {
+    public void getAuthUrl(HttpServletResponse response) {
 
         String url = wechatOpenProperties.getWechatOpenAuthorizeUrl() + "/authorize/auth/callback";
         try {
@@ -45,19 +58,39 @@ public class WechatAuthorizeController {
         } catch (WxErrorException e) {
             throw new SecurityException("获取授权页面链接失败");
         }
-        return R.ok(url);
+        response.sendRedirect(url);
     }
 
     /**
      * <h2>公众号授权回调</h2>
+     * https://developers.weixin.qq.com/doc/oplatform/Third-party_Platforms/api/api_get_authorizer_info.html#%E5%85%AC%E4%BC%97%E5%8F%B7%E8%AE%A4%E8%AF%81%E7%B1%BB%E5%9E%8B
      */
     @GetMapping("/auth/callback")
     @ApiIgnore
-    public R<WxOpenQueryAuthResult> jump(@RequestParam("auth_code") String authorizationCode) {
+    public String jump(@RequestParam("auth_code") String authorizationCode) {
         try {
             WxOpenQueryAuthResult queryAuthResult = wxOpenComponentService.getQueryAuth(authorizationCode);
             log.info("【getQueryAuth】：{}", queryAuthResult);
-            return R.ok(queryAuthResult);
+
+            final String appid = queryAuthResult.getAuthorizationInfo().getAuthorizerAppid();
+            final WxOpenAuthorizerInfoResult authorizerInfo = wxOpenComponentService.getAuthorizerInfo(appid);
+
+            final WxAccount wxAccount = wxAccountService.getById(appid);
+            if (Objects.isNull(wxAccount)) {
+                WxAccount newWxAccount = new WxAccount();
+                newWxAccount.setAppid(appid);
+                newWxAccount.setName(authorizerInfo.getAuthorizerInfo().getNickName());
+                newWxAccount.setType(authorizerInfo.getAuthorizerInfo().getServiceTypeInfo());
+                newWxAccount.setVerified(authorizerInfo.getAuthorizerInfo().getVerifyTypeInfo() == 0);
+                newWxAccount.setRefreshToken(queryAuthResult.getAuthorizationInfo().getAuthorizerRefreshToken());
+                newWxAccount.setAuthorizeType(MpAuthorizeType.OPEN.name());
+
+                wxAccountService.save(newWxAccount);
+            } else {
+                wxAccount.setRefreshToken(queryAuthResult.getAuthorizationInfo().getAuthorizerRefreshToken());
+                wxAccountService.updateById(wxAccount);
+            }
+            return "已成功授权，请返回管理台查看。";
         } catch (WxErrorException e) {
             log.error("【gotoPreAuthUrl】：{}", e.getMessage());
             throw new SecurityException(e.getMessage());
