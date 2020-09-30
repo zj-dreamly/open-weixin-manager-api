@@ -10,8 +10,6 @@ import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.material.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,21 +29,18 @@ public class WxAssetsServiceImpl implements WxAssetsService {
     WxMpServiceUtil wxMpServiceUtil;
 
     @Override
-    @Cacheable(key = "methodName")
     public WxMpMaterialCountResult materialCount(String appid) throws WxErrorException {
         log.info("从API获取素材总量");
         return wxMpServiceUtil.switchoverTo(appid).getMaterialService().materialCount();
     }
 
     @Override
-    @Cacheable(key = "methodName + #mediaId")
     public WxMpMaterialNews materialNewsInfo(String appid, String mediaId) throws WxErrorException {
         log.info("从API获取图文素材详情,mediaId={}", mediaId);
         return wxMpServiceUtil.switchoverTo(appid).getMaterialService().materialNewsInfo(mediaId);
     }
 
     @Override
-    @Cacheable(key = "methodName + #type + #page")
     public WxMpMaterialFileBatchGetResult materialFileBatchGet(String appid, String type, int page) throws WxErrorException {
         log.info("从API获取媒体素材列表,type={},page={}", type, page);
         final int pageSize = PageSizeConstant.PAGE_SIZE_SMALL;
@@ -53,41 +48,38 @@ public class WxAssetsServiceImpl implements WxAssetsService {
         return wxMpServiceUtil.switchoverTo(appid).getMaterialService().materialFileBatchGet(type, offset, pageSize);
     }
 
-    @Cacheable(key = "methodName + #page")
     @Override
-    public WxMpMaterialNewsBatchGetResult materialNewsBatchGet(int page) throws WxErrorException {
+    public WxMpMaterialNewsBatchGetResult materialNewsBatchGet(String appid, int page) throws WxErrorException {
         log.info("从API获取媒体素材列表,page={}", page);
         final int pageSize = PageSizeConstant.PAGE_SIZE_SMALL;
         int offset = (page - 1) * pageSize;
-        return wxMpService.getMaterialService().materialNewsBatchGet(offset, pageSize);
+        return wxMpServiceUtil.switchoverTo(appid).getMaterialService().materialNewsBatchGet(offset, pageSize);
     }
 
     @Override
-    @CacheEvict(allEntries = true)
-    public WxMpMaterialUploadResult materialNewsUpload(List<WxMpNewsArticle> articles) throws WxErrorException {
+    public WxMpMaterialUploadResult materialNewsUpload(String appid, List<WxMpNewsArticle> articles) throws WxErrorException {
         log.info("上传图文素材...");
         Assert.notEmpty(articles, "图文列表不得为空");
         WxMpMaterialNews news = new WxMpMaterialNews();
         news.setArticles(articles);
-        return wxMpService.getMaterialService().materialNewsUpload(news);
+        return wxMpServiceUtil.switchoverTo(appid).getMaterialService().materialNewsUpload(news);
     }
 
     /**
      * 更新图文素材中的某篇文章
      */
     @Override
-    @CacheEvict(allEntries = true)
-    public void materialArticleUpdate(WxMpMaterialArticleUpdate form) throws WxErrorException {
+    public void materialArticleUpdate(String appid, WxMpMaterialArticleUpdate form) throws WxErrorException {
         log.info("更新图文素材...");
-        wxMpService.getMaterialService().materialNewsUpdate(form);
+        wxMpServiceUtil.switchoverTo(appid).getMaterialService().materialNewsUpdate(form);
     }
 
     @Override
-    @CacheEvict(allEntries = true)
-    public WxMpMaterialUploadResult materialFileUpload(String mediaType, String fileName, MultipartFile file) throws WxErrorException, IOException {
+    public WxMpMaterialUploadResult materialFileUpload(String appid, String mediaType, String fileName, MultipartFile file) throws WxErrorException, IOException {
         log.info("上传媒体素材：{}", fileName);
         String originalFilename = file.getOriginalFilename();
-        File tempFile = File.createTempFile(fileName + "--", Objects.requireNonNull(originalFilename).substring(originalFilename.lastIndexOf(".")));
+        File tempFile = File.createTempFile(fileName + "--",
+                Objects.requireNonNull(originalFilename).substring(originalFilename.lastIndexOf(".")));
         file.transferTo(tempFile);
         WxMpMaterial wxMaterial = new WxMpMaterial();
         wxMaterial.setFile(tempFile);
@@ -95,15 +87,17 @@ public class WxAssetsServiceImpl implements WxAssetsService {
         if (WxConsts.MediaFileType.VIDEO.equals(mediaType)) {
             wxMaterial.setVideoTitle(fileName);
         }
-        WxMpMaterialUploadResult res = wxMpService.getMaterialService().materialFileUpload(mediaType, wxMaterial);
+        WxMpMaterialUploadResult res = wxMpServiceUtil
+                .switchoverTo(appid)
+                .getMaterialService()
+                .materialFileUpload(mediaType, wxMaterial);
         tempFile.deleteOnExit();
-        return null;
+        return res;
     }
 
     @Override
-    @CacheEvict(allEntries = true)
-    public boolean materialDelete(String mediaId) throws WxErrorException {
+    public boolean materialDelete(String appid, String mediaId) throws WxErrorException {
         log.info("删除素材，mediaId={}", mediaId);
-        return wxMpService.getMaterialService().materialDelete(mediaId);
+        return wxMpServiceUtil.switchoverTo(appid).getMaterialService().materialDelete(mediaId);
     }
 }

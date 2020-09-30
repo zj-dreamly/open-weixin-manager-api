@@ -25,25 +25,25 @@ public interface WxAssetsService {
     /**
      * 分页获取图文素材列表
      */
-    WxMpMaterialNewsBatchGetResult materialNewsBatchGet(int page) throws WxErrorException;
+    WxMpMaterialNewsBatchGetResult materialNewsBatchGet(String appid, int page) throws WxErrorException;
 
     /**
      * 添加图文永久素材
      */
-    WxMpMaterialUploadResult materialNewsUpload(List<WxMpNewsArticle> articles)throws WxErrorException;
+    WxMpMaterialUploadResult materialNewsUpload(String appid, List<WxMpNewsArticle> articles)throws WxErrorException;
 
     /**
      * 更新图文素材中的某篇文章
      */
-    void materialArticleUpdate(WxMpMaterialArticleUpdate form) throws WxErrorException;
+    void materialArticleUpdate(String appid, WxMpMaterialArticleUpdate form) throws WxErrorException;
 
     /**
      * 添加多媒体永久素材
      */
-    WxMpMaterialUploadResult materialFileUpload(String mediaType, String fileName, MultipartFile file) throws WxErrorException, IOException;
+    WxMpMaterialUploadResult materialFileUpload(String appid, String mediaType, String fileName, MultipartFile file) throws WxErrorException, IOException;
 
     /**
      * 删除素材
      */
-    boolean materialDelete(String mediaId)throws WxErrorException;
+    boolean materialDelete(String appid, String mediaId)throws WxErrorException;
 }
