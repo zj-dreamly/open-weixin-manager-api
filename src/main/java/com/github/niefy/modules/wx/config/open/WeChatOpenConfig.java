@@ -3,6 +3,7 @@ package com.github.niefy.modules.wx.config.open;
 import com.github.niefy.modules.sys.entity.SysConfigEntity;
 import com.github.niefy.modules.sys.service.SysConfigService;
 import com.github.niefy.modules.wx.entity.WxAccount;
+import com.github.niefy.modules.wx.enums.MpAuthorizeType;
 import com.github.niefy.modules.wx.service.WxAccountService;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -25,8 +26,6 @@ import java.util.List;
 @Component
 @AllArgsConstructor
 public class WeChatOpenConfig {
-
-    private final WechatOpenProperties wechatOpenProperties;
 
     private final WxAccountService wxAccountService;
 
@@ -55,7 +54,7 @@ public class WeChatOpenConfig {
         wxOpenServiceImpl.setWxOpenConfigStorage(memoryConfigStorage);
 
         // 设置授权公众号的refresh_token
-        final List<WxAccount> accountList = wxAccountService.list();
+        final List<WxAccount> accountList = wxAccountService.listByType(MpAuthorizeType.OPEN);
         for (WxAccount wxAccount : accountList) {
             memoryConfigStorage.setAuthorizerRefreshToken(wxAccount.getAppid(),
                     wxAccount.getRefreshToken());

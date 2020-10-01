@@ -3,9 +3,11 @@ package com.github.niefy.modules.wx.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.github.niefy.common.utils.PageUtils;
 import com.github.niefy.modules.wx.entity.WxAccount;
+import com.github.niefy.modules.wx.enums.MpAuthorizeType;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,5 +29,7 @@ public interface WxAccountService extends IService<WxAccount> {
 
     @Override
     boolean removeByIds(Collection<? extends Serializable> idList);
+
+    List<WxAccount> listByType(MpAuthorizeType mpAuthorizeType);
 }
 

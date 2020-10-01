@@ -2,6 +2,7 @@ package com.github.niefy.modules.wx.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.github.niefy.common.utils.PageUtils;
@@ -49,7 +50,7 @@ public class WxAccountServiceImpl extends ServiceImpl<WxAccountMapper, WxAccount
     @PostConstruct
     public void loadWxMpConfigStorages() {
         logger.info("加载公众号配置...");
-        List<WxAccount> accountList = this.list();
+        List<WxAccount> accountList = this.listByType(MpAuthorizeType.MP);;
         if (accountList == null || accountList.isEmpty()) {
             logger.info("未读取到公众号配置，请在管理后台添加");
             return;
@@ -87,6 +88,11 @@ public class WxAccountServiceImpl extends ServiceImpl<WxAccountMapper, WxAccount
         idList.forEach(id -> wxMpService.removeConfigStorage((String) id));
 
         return SqlHelper.retBool(this.baseMapper.deleteBatchIds(idList));
+    }
+
+    @Override
+    public List<WxAccount> listByType(MpAuthorizeType mpAuthorizeType) {
+        return this.list(Wrappers.<WxAccount>lambdaQuery().eq(WxAccount::getAuthorizeType, mpAuthorizeType.name()));
     }
 
     /**

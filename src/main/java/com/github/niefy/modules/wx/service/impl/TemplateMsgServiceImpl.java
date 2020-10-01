@@ -73,6 +73,7 @@ public class TemplateMsgServiceImpl implements TemplateMsgService {
         }
         long currentPage = 1L, totalPages = Long.MAX_VALUE;
         filterParams.put("limit", "500");
+        filterParams.put("appid", appid);
         while (currentPage <= totalPages) {
             filterParams.put("page", String.valueOf(currentPage));
             //按条件查询用户
