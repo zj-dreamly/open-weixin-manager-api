@@ -10,31 +10,33 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import me.chanjar.weixin.common.error.WxError;
 import me.chanjar.weixin.common.error.WxErrorException;
-import me.chanjar.weixin.mp.api.WxMpService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
 
 /**
  * 粉丝标签
+ *
+ * @author chzn
  */
 @RestController
 @RequestMapping("/wxUserTags")
 @RequiredArgsConstructor
 @Api(tags = {"粉丝标签"})
 public class WxUserTagsController {
-    @Autowired
+
+    @Resource
     WxUserTagsService wxUserTagsService;
-    @Autowired
+
+    @Resource
     WxUserService wxUserService;
-    private final WxMpService wxMpService;
 
     @GetMapping("/userTags")
     @ApiOperation(value = "当前用户的标签")
-    public R userTags(@CookieValue String appid, @CookieValue String openid) {
+    public R userTags(@RequestParam String appid, @CookieValue String openid) {
         if (openid == null) {
             return R.error("none_openid");
         }
-        this.wxMpService.switchoverTo(appid);
         WxUser wxUser = wxUserService.getById(openid);
         if (wxUser == null) {
             wxUser = wxUserService.refreshUserInfo(openid, appid);
@@ -47,8 +49,7 @@ public class WxUserTagsController {
 
     @PostMapping("/tagging")
     @ApiOperation(value = "给用户绑定标签")
-    public R tagging(@CookieValue String appid, @CookieValue String openid, @RequestBody WxUserTaggingForm form) {
-        this.wxMpService.switchoverTo(appid);
+    public R tagging(@RequestParam String appid, @CookieValue String openid, @RequestBody WxUserTaggingForm form) {
         try {
             wxUserTagsService.tagging(appid, form.getTagid(), openid);
         } catch (WxErrorException e) {
@@ -65,8 +66,7 @@ public class WxUserTagsController {
 
     @PostMapping("/untagging")
     @ApiOperation(value = "解绑标签")
-    public R untagging(@CookieValue String appid, @CookieValue String openid, @RequestBody WxUserTaggingForm form) throws WxErrorException {
-        this.wxMpService.switchoverTo(appid);
+    public R untagging(@RequestParam String appid, @CookieValue String openid, @RequestBody WxUserTaggingForm form) throws WxErrorException {
         wxUserTagsService.untagging(appid, form.getTagid(), openid);
         return R.ok();
     }
