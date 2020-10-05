@@ -29,6 +29,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author zj-dreamly
+ */
 @Service("wxAccountService")
 public class WxAccountServiceImpl extends ServiceImpl<WxAccountMapper, WxAccount> implements WxAccountService {
     Logger logger = LoggerFactory.getLogger(this.getClass());
