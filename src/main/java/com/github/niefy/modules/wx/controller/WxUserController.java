@@ -13,6 +13,7 @@ import javax.annotation.Resource;
 
 /**
  * 微信用户（粉丝）
+ * @author zj-dreamly
  */
 @RestController
 @RequestMapping("/wxUser")
