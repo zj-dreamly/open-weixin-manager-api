@@ -30,7 +30,7 @@ public class SubscribeHandler extends AbstractHandler {
     public WxMpXmlOutMessage handle(WxMpXmlMessage wxMessage, Map<String, Object> context, WxMpService wxMpService,
                                     WxSessionManager sessionManager) {
 
-        this.logger.info("新关注用户 OPENID: " + wxMessage.getFromUser() + "，事件：" + wxMessage.getEventKey());
+        this.logger.info("【新关注用户，openId】: " + wxMessage.getFromUser() + "，事件：" + wxMessage.getEventKey());
         String appid = wxMessage.getAuthorizeAppId();
         this.logger.info("appid:{}",appid);
         userService.refreshUserInfo(wxMessage.getFromUser(),appid);

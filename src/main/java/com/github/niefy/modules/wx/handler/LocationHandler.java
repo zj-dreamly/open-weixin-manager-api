@@ -1,6 +1,7 @@
 package com.github.niefy.modules.wx.handler;
 
 
+import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.session.WxSessionManager;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
@@ -15,6 +16,7 @@ import static me.chanjar.weixin.common.api.WxConsts.XmlMsgType;
  * @author Binary Wang
  */
 @Component
+@Slf4j
 public class LocationHandler extends AbstractHandler {
 
     @Override
@@ -22,8 +24,8 @@ public class LocationHandler extends AbstractHandler {
                                     Map<String, Object> context, WxMpService wxMpService,
                                     WxSessionManager sessionManager) {
         if (wxMessage.getMsgType().equals(XmlMsgType.LOCATION)) {
-            //TODO 接收处理用户发送的地理位置消息
-
+            // 接收处理用户发送的地理位置消息
+            log.info("【位置消息处理器收到消息】：{}", wxMessage.toString());
         }
 
         //上报地理位置事件
@@ -32,7 +34,7 @@ public class LocationHandler extends AbstractHandler {
         this.logger.info("\n经度 : " + wxMessage.getLongitude());
         this.logger.info("\n精度 : " + wxMessage.getPrecision());
 
-        //TODO  可以将用户地理位置信息保存到本地数据库，以便以后使用
+        // 可以将用户地理位置信息保存到本地数据库，以便以后使用
 
         return null;
     }

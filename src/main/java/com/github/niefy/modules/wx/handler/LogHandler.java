@@ -27,7 +27,7 @@ public class LogHandler extends AbstractHandler {
                                     Map<String, Object> context, WxMpService wxMpService,
                                     WxSessionManager sessionManager) {
         try {
-            this.logger.debug("\n日志处理器接收到请求消息，内容：{}", Json.toJsonString(wxMessage));
+            this.logger.debug("\n【日志处理器接收到请求消息】：{}", Json.toJsonString(wxMessage));
             wxMsgService.addWxMsg(new WxMsg(wxMessage));
         } catch (Exception e) {
             this.logger.error("记录消息异常",e);

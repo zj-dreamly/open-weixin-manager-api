@@ -23,7 +23,7 @@ public class ScanHandler extends AbstractHandler {
     public WxMpXmlOutMessage handle(WxMpXmlMessage wxMpXmlMessage, Map<String, Object> map,
                                     WxMpService wxMpService, WxSessionManager wxSessionManager) {
         //扫码事件处理
-        this.logger.info("用户扫描带参二维码 OPENID: " + wxMpXmlMessage.getFromUser());
+        this.logger.info("【用户扫描带参二维码，openId】: " + wxMpXmlMessage.getFromUser());
         String appid = wxMpXmlMessage.getAuthorizeAppId();
         msgReplyService.tryAutoReply(appid, true, wxMpXmlMessage.getFromUser(), wxMpXmlMessage.getEventKey());
 

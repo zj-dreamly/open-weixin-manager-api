@@ -21,7 +21,7 @@ public class StoreCheckNotifyHandler extends AbstractHandler {
     public WxMpXmlOutMessage handle(WxMpXmlMessage wxMessage,
                                     Map<String, Object> context, WxMpService wxMpService,
                                     WxSessionManager sessionManager) {
-        // TODO 处理门店审核事件
+        // 处理门店审核事件
         return null;
     }
 

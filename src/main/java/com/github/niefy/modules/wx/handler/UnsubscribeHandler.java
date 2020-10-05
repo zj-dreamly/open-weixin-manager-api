@@ -11,12 +11,14 @@ import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
 
+import javax.annotation.Resource;
+
 /**
  * @author Binary Wang
  */
 @Component
 public class UnsubscribeHandler extends AbstractHandler {
-    @Autowired
+    @Resource
     WxUserService userService;
 
     @Override
@@ -24,7 +26,7 @@ public class UnsubscribeHandler extends AbstractHandler {
                                     Map<String, Object> context, WxMpService wxMpService,
                                     WxSessionManager sessionManager) {
         String openid = wxMessage.getFromUser();
-        this.logger.info("取消关注用户 OPENID: " + openid);
+        this.logger.info("【取消关注用户，openId】: " + openid);
         userService.unsubscribe(wxMessage.getAuthorizeAppId(),openid);
         return null;
     }
