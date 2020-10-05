@@ -2,6 +2,7 @@ package com.github.niefy.modules.wx.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.niefy.common.utils.Query;
 import com.github.niefy.config.TaskExcutor;
@@ -23,6 +24,7 @@ import org.springframework.util.StringUtils;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -108,8 +110,15 @@ public class WxUserServiceImpl extends ServiceImpl<WxUserMapper, WxUser> impleme
     }
 
     @Override
-    public void unsubscribe(String openid) {
-        userMapper.unsubscribe(openid);
+    public void unsubscribe(String appid, String openid) {
+        final WxUser one = this.getOne(Wrappers.<WxUser>lambdaQuery()
+                .eq(WxUser::getAppid, appid)
+                .eq(WxUser::getOpenid, openid));
+
+        if (!Objects.isNull(one)){
+            one.setSubscribe(false);
+            userMapper.updateById(one);
+        }
     }
 
     /**

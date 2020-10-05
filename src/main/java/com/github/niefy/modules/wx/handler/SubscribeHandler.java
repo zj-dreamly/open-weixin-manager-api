@@ -29,7 +29,7 @@ public class SubscribeHandler extends AbstractHandler {
                                     WxSessionManager sessionManager) {
 
         this.logger.info("新关注用户 OPENID: " + wxMessage.getFromUser() + "，事件：" + wxMessage.getEventKey());
-        String appid = WxMpConfigStorageHolder.get();
+        String appid = wxMessage.getAuthorizeAppId();
         this.logger.info("appid:{}",appid);
         userService.refreshUserInfo(wxMessage.getFromUser(),appid);
 
@@ -47,7 +47,7 @@ public class SubscribeHandler extends AbstractHandler {
     protected WxMpXmlOutMessage handleSpecial(WxMpXmlMessage wxMessage) {
         this.logger.info("特殊请求-新关注用户 OPENID: " + wxMessage.getFromUser());
         //对关注事件和扫码事件分别处理
-        String appid = WxMpConfigStorageHolder.get();
+        String appid = wxMessage.getAuthorizeAppId();
         userService.refreshUserInfo(wxMessage.getFromUser(),appid);
         msgReplyService.tryAutoReply(appid, true, wxMessage.getFromUser(), wxMessage.getEvent());
         if (!StringUtils.isEmpty(wxMessage.getEventKey())) {

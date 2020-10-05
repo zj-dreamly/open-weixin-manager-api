@@ -24,7 +24,7 @@ public class ScanHandler extends AbstractHandler {
                                     WxMpService wxMpService, WxSessionManager wxSessionManager) {
         //扫码事件处理
         this.logger.info("用户扫描带参二维码 OPENID: " + wxMpXmlMessage.getFromUser());
-        String appid = WxMpConfigStorageHolder.get();
+        String appid = wxMpXmlMessage.getAuthorizeAppId();
         msgReplyService.tryAutoReply(appid, true, wxMpXmlMessage.getFromUser(), wxMpXmlMessage.getEventKey());
 
         return null;

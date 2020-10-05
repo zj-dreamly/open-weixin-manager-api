@@ -1,6 +1,5 @@
 package com.github.niefy.modules.wx.handler;
 
-
 import java.util.Map;
 
 import com.github.niefy.modules.wx.entity.WxMsg;
@@ -37,14 +36,14 @@ public class MsgHandler extends AbstractHandler {
 
         String textContent = wxMessage.getContent();
         String fromUser = wxMessage.getFromUser();
-        String appid = WxMpConfigStorageHolder.get();
-        boolean autoReplyed = msgReplyService.tryAutoReply(appid,false, fromUser, textContent);
+        String appid = wxMessage.getAuthorizeAppId();
+        boolean autoReplyed = msgReplyService.tryAutoReply(appid, false, fromUser, textContent);
         //当用户输入关键词如“你好”，“客服”等，并且有客服在线时，把消息转发给在线客服
         if (TRANSFER_CUSTOMER_SERVICE_KEY.equals(textContent) || !autoReplyed) {
-            wxMsgService.addWxMsg(WxMsg.buildOutMsg(WxConsts.KefuMsgType.TRANSFER_CUSTOMER_SERVICE,fromUser,null));
+            wxMsgService.addWxMsg(WxMsg.buildOutMsg(wxMessage.getAuthorizeAppId(), WxConsts.KefuMsgType.TRANSFER_CUSTOMER_SERVICE, fromUser, null));
             return WxMpXmlOutMessage
-                .TRANSFER_CUSTOMER_SERVICE().fromUser(wxMessage.getToUser())
-                .toUser(fromUser).build();
+                    .TRANSFER_CUSTOMER_SERVICE().fromUser(wxMessage.getToUser())
+                    .toUser(fromUser).build();
         }
         return null;
 

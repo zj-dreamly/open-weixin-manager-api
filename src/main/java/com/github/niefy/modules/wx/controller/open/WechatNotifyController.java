@@ -1,6 +1,5 @@
 package com.github.niefy.modules.wx.controller.open;
 
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import com.github.niefy.modules.sys.entity.SysConfigEntity;
 import com.github.niefy.modules.sys.service.SysConfigService;
@@ -10,9 +9,10 @@ import com.github.niefy.modules.wx.util.Messageutils;
 import com.github.niefy.modules.wx.util.PublishUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.error.WxErrorException;
+import me.chanjar.weixin.mp.api.WxMpMessageRouter;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
+import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
 import me.chanjar.weixin.open.api.impl.WxOpenComponentServiceImpl;
 import me.chanjar.weixin.open.bean.message.WxOpenXmlMessage;
 import org.apache.commons.lang3.StringUtils;
@@ -53,6 +53,8 @@ public class WechatNotifyController {
 
     private final SysConfigService sysConfigService;
 
+    private final WxMpMessageRouter messageRouter;
+
     /**
      * <h2>接受微信服务器每10分钟颁发的Ticket</h2>
      */
@@ -83,12 +85,12 @@ public class WechatNotifyController {
 
             // 更新ticket
             final SysConfigEntity sysConfig = sysConfigService.getSysConfig(COMPONENT_VERIFY_TICKET);
-            if (Objects.isNull(sysConfig)){
+            if (Objects.isNull(sysConfig)) {
                 SysConfigEntity sysConfigEntity = new SysConfigEntity();
                 sysConfigEntity.setParamKey(COMPONENT_VERIFY_TICKET);
                 sysConfigEntity.setParamValue(inMessage.getComponentVerifyTicket());
                 sysConfigService.save(sysConfigEntity);
-            }else {
+            } else {
                 sysConfig.setParamValue(inMessage.getComponentVerifyTicket());
                 sysConfigService.updateById(sysConfig);
             }
@@ -119,55 +121,23 @@ public class WechatNotifyController {
             throw new IllegalArgumentException("【非法请求，可能属于伪造的请求！】");
         }
 
-        String out = SUCCESS;
+        String out;
         WxMpXmlMessage inMessage = WxOpenXmlMessage.fromEncryptedMpXml(requestBody,
                 wxOpenComponentService.getWxOpenConfigStorage(), timestamp, nonce, msgSignature);
         log.info("\n【接收微信Message请求，消息解密后内容为】：\n{} ", inMessage.toString());
 
         if (StringUtils.equalsAnyIgnoreCase(appId, TEST_APP_ID_1, TEST_APP_ID_2)) {
             out = publishUtils.publish(inMessage, appId, wxOpenComponentService);
+            return out;
         }
 
-        // 扫码事件触发
-        if (StrUtil.isNotBlank(inMessage.getEventKey())) {
-            out = sendMessage(appId, inMessage);
+        final WxMpXmlOutMessage outMessage = messageRouter.route(inMessage);
+        if (outMessage == null) {
+            return StrUtil.EMPTY;
         }
 
-        // 订阅事件触发
-        if (StrUtil.isNotBlank(inMessage.getEvent())) {
-            updateSubscribe(appId, inMessage);
-        }
+        return WxOpenXmlMessage.wxMpOutXmlMessageToEncryptedXml(outMessage,
+                wxOpenComponentService.getWxOpenConfigStorage());
 
-        return out;
-    }
-
-    /**
-     * <h2>被动回复消息</h2>
-     */
-    private String sendMessage(String appId, WxMpXmlMessage inMessage) {
-        String out = SUCCESS;
-        final String eventKey = inMessage.getEventKey();
-
-        messageutils.text(inMessage, eventKey);
-        log.info("【公众号[{}]开始推送消息：{}】", appId, out);
-        return out;
-    }
-
-    /**
-     * <h2>关注/取消关注事件</h2>
-     */
-    private void updateSubscribe(String appId, WxMpXmlMessage inMessage) {
-
-        if (WxConsts.EventType.SUBSCRIBE.equals(inMessage.getEvent())) {
-            final String fromUser = inMessage.getFromUser();
-            log.warn("【用户[{}]取消了公众号[{}]订阅】", fromUser, appId);
-
-        }
-
-        if (WxConsts.EventType.UNSUBSCRIBE.equals(inMessage.getEvent())) {
-            final String fromUser = inMessage.getFromUser();
-            log.warn("【用户[{}]订阅了公众号{}】", fromUser, appId);
-
-        }
     }
 }

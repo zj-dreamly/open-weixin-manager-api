@@ -25,7 +25,7 @@ public class UnsubscribeHandler extends AbstractHandler {
                                     WxSessionManager sessionManager) {
         String openid = wxMessage.getFromUser();
         this.logger.info("取消关注用户 OPENID: " + openid);
-        userService.unsubscribe(openid);
+        userService.unsubscribe(wxMessage.getAuthorizeAppId(),openid);
         return null;
     }
 

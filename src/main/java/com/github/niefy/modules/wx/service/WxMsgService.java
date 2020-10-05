@@ -22,7 +22,7 @@ public interface WxMsgService extends IService<WxMsg> {
 
     /**
      * 记录msg，异步入库
-     * @param msg
+     * @param msg msg
      */
     void addWxMsg(WxMsg msg);
 }

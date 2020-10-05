@@ -10,6 +10,7 @@ import java.util.Map;
 public interface WxUserService extends IService<WxUser> {
     /**
      * 分页查询用户数据
+     *
      * @param params 查询参数
      * @return PageUtils 分页结果
      */
@@ -18,12 +19,12 @@ public interface WxUserService extends IService<WxUser> {
     /**
      * 根据openid更新用户信息
      */
-    WxUser refreshUserInfo(String openid,String appid);
+    WxUser refreshUserInfo(String openid, String appid);
 
     /**
      * 异步批量更新用户信息
      */
-    void refreshUserInfoAsync(String[] openidList,String appid);
+    void refreshUserInfoAsync(String[] openidList, String appid);
 
     /**
      * 数据存在时更新，否则新增
@@ -33,15 +34,16 @@ public interface WxUserService extends IService<WxUser> {
     /**
      * 取消关注，更新关注状态
      */
-    void unsubscribe(String openid);
+    void unsubscribe(String appid, String openid);
+
     /**
      * 同步用户列表
      */
     void syncWxUsers(String appid);
-    
+
     /**
      * 通过传入的openid列表，同步用户列表
      */
-    void syncWxUsers(List<String> openids,String appid);
+    void syncWxUsers(List<String> openids, String appid);
 
 }

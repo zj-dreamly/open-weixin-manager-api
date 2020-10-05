@@ -42,12 +42,11 @@ public class WxMsgManageController {
     @GetMapping("/list")
     @RequiresPermissions("wx:wxmsg:list")
     @ApiOperation(value = "列表")
-    public R list(@RequestParam String appid,@RequestParam Map<String, Object> params){
-        params.put("appid",appid);
+    public R list(@RequestParam String appid, @RequestParam Map<String, Object> params) {
+        params.put("appid", appid);
         PageUtils page = wxMsgService.queryPage(params);
         return R.ok().put("page", page);
     }
-
 
     /**
      * 信息
@@ -55,8 +54,8 @@ public class WxMsgManageController {
     @GetMapping("/info/{id}")
     @RequiresPermissions("wx:wxmsg:info")
     @ApiOperation(value = "详情")
-    public R info(@PathVariable("id") Long id){
-		WxMsg wxMsg = wxMsgService.getById(id);
+    public R info(@PathVariable("id") Long id) {
+        WxMsg wxMsg = wxMsgService.getById(id);
         return R.ok().put("wxMsg", wxMsg);
     }
 
@@ -66,8 +65,8 @@ public class WxMsgManageController {
     @PostMapping("/reply")
     @RequiresPermissions("wx:wxmsg:save")
     @ApiOperation(value = "回复")
-    public R reply(@RequestBody WxMsgReplyForm form){
-        msgReplyService.reply(form.getOpenid(),form.getReplyType(),form.getReplyContent());
+    public R reply(@RequestBody WxMsgReplyForm form) {
+        msgReplyService.reply(form.getAppid(), form.getOpenid(), form.getReplyType(), form.getReplyContent());
         return R.ok();
     }
 
@@ -77,8 +76,8 @@ public class WxMsgManageController {
     @PostMapping("/delete")
     @RequiresPermissions("wx:wxmsg:delete")
     @ApiOperation(value = "删除")
-    public R delete(@RequestBody Long[] ids){
-		wxMsgService.removeByIds(Arrays.asList(ids));
+    public R delete(@RequestBody Long[] ids) {
+        wxMsgService.removeByIds(Arrays.asList(ids));
         return R.ok();
     }
 
