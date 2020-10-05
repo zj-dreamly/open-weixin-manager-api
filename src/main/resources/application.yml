@@ -48,7 +48,7 @@ mybatis-plus:
     #原生配置
     configuration:
         map-underscore-to-camel-case: true
-        cache-enabled: true
+        cache-enabled: false
         call-setters-on-nulls: true
         jdbc-type-for-null: 'null'
 wechat:

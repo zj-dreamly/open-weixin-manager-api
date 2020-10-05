@@ -6,7 +6,6 @@ import com.github.niefy.modules.wx.util.WxMpServiceUtil;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.bean.tag.WxUserTag;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -16,7 +15,6 @@ import java.util.List;
  * @author zj-dreamly
  */
 @Service
-@CacheConfig(cacheNames = {"wxUserTagsServiceCache"})
 @Slf4j
 public class WxUserTagsServiceImpl implements WxUserTagsService {
 
