@@ -47,8 +47,6 @@ public class WechatNotifyController {
 
     private final WxOpenComponentServiceImpl wxOpenComponentService;
 
-    private final Messageutils messageutils;
-
     private final PublishUtils publishUtils;
 
     private final SysConfigService sysConfigService;
@@ -131,6 +129,7 @@ public class WechatNotifyController {
             return out;
         }
 
+        inMessage.setAuthorizeAppId(appId);
         final WxMpXmlOutMessage outMessage = messageRouter.route(inMessage);
         if (outMessage == null) {
             return StrUtil.EMPTY;

@@ -70,6 +70,7 @@ public class WxMpPortalController {
         if (encType == null) {
             // 明文传输的消息
             WxMpXmlMessage inMessage = WxMpXmlMessage.fromXml(requestBody);
+            inMessage.setAuthorizeAppId(appid);
             WxMpXmlOutMessage outMessage = this.route(appid,inMessage);
             if (outMessage == null) {
                 return "";

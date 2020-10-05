@@ -14,14 +14,16 @@ import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlOutMessage;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
+
 /**
  * @author Binary Wang
  */
 @Component
 public class SubscribeHandler extends AbstractHandler {
-    @Autowired
+    @Resource
     MsgReplyService msgReplyService;
-    @Autowired
+    @Resource
     WxUserService userService;
 
     @Override
@@ -35,7 +37,8 @@ public class SubscribeHandler extends AbstractHandler {
 
         msgReplyService.tryAutoReply(appid, true, wxMessage.getFromUser(), wxMessage.getEvent());
 
-        if (!StringUtils.isEmpty(wxMessage.getEventKey())) {// 处理特殊事件，如用户扫描带参二维码关注
+        if (!StringUtils.isEmpty(wxMessage.getEventKey())) {
+            // 处理特殊事件，如用户扫描带参二维码关注
             msgReplyService.tryAutoReply(appid, true, wxMessage.getFromUser(), wxMessage.getEventKey());
         }
         return null;

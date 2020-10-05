@@ -22,6 +22,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
@@ -32,7 +33,7 @@ import java.util.Map;
 public class WxAccountServiceImpl extends ServiceImpl<WxAccountMapper, WxAccount> implements WxAccountService {
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
+    @Resource
     WxMpService wxMpService;
 
     @Override
