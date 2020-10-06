@@ -1,12 +1,13 @@
 package com.github.niefy.modules.wx.service;
 
+import com.github.zj.dreamly.modules.wx.service.TemplateMsgService;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
 import me.chanjar.weixin.mp.util.WxMpConfigStorageHolder;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,7 @@ import java.util.List;
  */
 @SpringBootTest
 class TemplateMsgServiceTest {
-    @Autowired
+    @Resource
     TemplateMsgService templateMsgService;
 
     /**
@@ -26,17 +27,17 @@ class TemplateMsgServiceTest {
     @Test
     void sendTemplateMsg() {
         String appid = WxMpConfigStorageHolder.get();
-        List<WxMpTemplateData> data  = new ArrayList<>();
-        data.add(new WxMpTemplateData("first","模板消息测试"));
-        data.add(new WxMpTemplateData("keywords1","xxxxx"));
-        data.add(new WxMpTemplateData("keywords2","xxxxx"));
-        data.add(new WxMpTemplateData("remark","点击查看消息详情"));
+        List<WxMpTemplateData> data = new ArrayList<>();
+        data.add(new WxMpTemplateData("first", "模板消息测试"));
+        data.add(new WxMpTemplateData("keywords1", "xxxxx"));
+        data.add(new WxMpTemplateData("keywords2", "xxxxx"));
+        data.add(new WxMpTemplateData("remark", "点击查看消息详情"));
         WxMpTemplateMessage wxMpTemplateMessage = WxMpTemplateMessage.builder()
-            .templateId("模板ID")
-            .url("跳转链接")
-            .toUser("用户openid")
-            .data(data)
-            .build();
-        templateMsgService.sendTemplateMsg(wxMpTemplateMessage,appid);
+                .templateId("模板ID")
+                .url("跳转链接")
+                .toUser("用户openid")
+                .data(data)
+                .build();
+        templateMsgService.sendTemplateMsg(wxMpTemplateMessage, appid);
     }
 }
