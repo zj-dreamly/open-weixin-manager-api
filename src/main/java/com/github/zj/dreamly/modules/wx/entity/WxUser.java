@@ -39,7 +39,7 @@ public class WxUser implements Serializable {
     private boolean subscribe;
     private String unionid;
     private String remark;
-    private String tagidList;
+    private JSONArray tagidList;
     private String subscribeScene;
     private String qrSceneStr;
 
@@ -63,7 +63,7 @@ public class WxUser implements Serializable {
             this.subscribeTime = new Date(wxMpUser.getSubscribeTime() * 1000);
             this.unionid = wxMpUser.getUnionId();
             this.remark = wxMpUser.getRemark();
-            this.tagidList = JSONArray.parseArray(JSONObject.toJSONString(wxMpUser.getTagIds())).toJSONString();
+            this.tagidList = JSONArray.parseArray(JSONObject.toJSONString(wxMpUser.getTagIds()));
             this.subscribeScene = wxMpUser.getSubscribeScene();
             String qrScene = wxMpUser.getQrScene();
             this.qrSceneStr = StringUtils.isEmpty(qrScene) ? wxMpUser.getQrSceneStr() : qrScene;

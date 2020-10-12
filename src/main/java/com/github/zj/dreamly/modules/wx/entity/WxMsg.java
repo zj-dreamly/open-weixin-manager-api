@@ -42,7 +42,7 @@ public class WxMsg implements Serializable {
     /**
      * 消息详情
      */
-    private String detail;
+    private JSONObject detail;
     /**
      * 创建时间
      */
@@ -61,37 +61,34 @@ public class WxMsg implements Serializable {
         this.appid = wxMessage.getAuthorizeAppId();
         this.inOut = WxMsgInOut.IN;
         this.msgType = wxMessage.getMsgType();
-
-        final JSONObject jsonObject = new JSONObject();
+        this.detail = new JSONObject();
         Long createTime = wxMessage.getCreateTime();
         this.createTime = createTime == null ? new Date() : new Date(createTime * 1000);
         if (WxConsts.XmlMsgType.TEXT.equals(this.msgType)) {
-            jsonObject.put("content", wxMessage.getContent());
+            this.detail.put("content", wxMessage.getContent());
         } else if (WxConsts.XmlMsgType.IMAGE.equals(this.msgType)) {
-            jsonObject.put("picUrl", wxMessage.getPicUrl());
-            jsonObject.put("mediaId", wxMessage.getMediaId());
+            this.detail.put("picUrl", wxMessage.getPicUrl());
+            this.detail.put("mediaId", wxMessage.getMediaId());
         } else if (WxConsts.XmlMsgType.VOICE.equals(this.msgType)) {
-            jsonObject.put("format", wxMessage.getFormat());
-            jsonObject.put("mediaId", wxMessage.getMediaId());
+            this.detail.put("format", wxMessage.getFormat());
+            this.detail.put("mediaId", wxMessage.getMediaId());
         } else if (WxConsts.XmlMsgType.VIDEO.equals(this.msgType) ||
                 WxConsts.XmlMsgType.SHORTVIDEO.equals(this.msgType)) {
-            jsonObject.put("thumbMediaId", wxMessage.getThumbMediaId());
-            jsonObject.put("mediaId", wxMessage.getMediaId());
+            this.detail.put("thumbMediaId", wxMessage.getThumbMediaId());
+            this.detail.put("mediaId", wxMessage.getMediaId());
         } else if (WxConsts.XmlMsgType.LOCATION.equals(this.msgType)) {
-            jsonObject.put("locationX", wxMessage.getLocationX());
-            jsonObject.put("locationY", wxMessage.getLocationY());
-            jsonObject.put("scale", wxMessage.getScale());
-            jsonObject.put("label", wxMessage.getLabel());
+            this.detail.put("locationX", wxMessage.getLocationX());
+            this.detail.put("locationY", wxMessage.getLocationY());
+            this.detail.put("scale", wxMessage.getScale());
+            this.detail.put("label", wxMessage.getLabel());
         } else if (WxConsts.XmlMsgType.LINK.equals(this.msgType)) {
-            jsonObject.put("title", wxMessage.getTitle());
-            jsonObject.put("description", wxMessage.getDescription());
-            jsonObject.put("url", wxMessage.getUrl());
+            this.detail.put("title", wxMessage.getTitle());
+            this.detail.put("description", wxMessage.getDescription());
+            this.detail.put("url", wxMessage.getUrl());
         } else if (WxConsts.XmlMsgType.EVENT.equals(this.msgType)) {
-            jsonObject.put("event", wxMessage.getEvent());
-            jsonObject.put("eventKey", wxMessage.getEventKey());
+            this.detail.put("event", wxMessage.getEvent());
+            this.detail.put("eventKey", wxMessage.getEventKey());
         }
-
-        this.detail = jsonObject.toJSONString();
     }
 
     public static WxMsg buildOutMsg(String appid, String msgType, String openid, JSONObject detail) {
@@ -99,7 +96,7 @@ public class WxMsg implements Serializable {
         wxMsg.appid = appid;
         wxMsg.msgType = msgType;
         wxMsg.openid = openid;
-        wxMsg.detail = detail.toJSONString();
+        wxMsg.detail = detail;
         wxMsg.createTime = new Date();
         wxMsg.inOut = WxMsgInOut.OUT;
         return wxMsg;

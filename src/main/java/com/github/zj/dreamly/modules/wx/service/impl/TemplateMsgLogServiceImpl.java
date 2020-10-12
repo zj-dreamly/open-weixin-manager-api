@@ -31,8 +31,6 @@ public class TemplateMsgLogServiceImpl extends ServiceImpl<TemplateMsgLogMapper,
 
     /**
      * 记录log，异步入库
-     *
-     * @param log
      */
     @Override
     @Async

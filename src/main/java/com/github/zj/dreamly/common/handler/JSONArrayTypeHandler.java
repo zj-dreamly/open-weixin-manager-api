@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 import org.apache.ibatis.type.MappedJdbcTypes;
+import org.springframework.stereotype.Component;
 
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
@@ -13,11 +14,12 @@ import java.sql.SQLException;
 /**
  * @author zj-dreamly
  */
+@Component
 @MappedJdbcTypes(JdbcType.VARCHAR)
 public class JSONArrayTypeHandler extends BaseTypeHandler<JSONArray> {
     @Override
     public void setNonNullParameter(PreparedStatement ps, int i, JSONArray array, JdbcType jdbcType) throws SQLException {
-        ps.setString(i,array.toJSONString());
+        ps.setString(i, array.toJSONString());
     }
 
     @Override

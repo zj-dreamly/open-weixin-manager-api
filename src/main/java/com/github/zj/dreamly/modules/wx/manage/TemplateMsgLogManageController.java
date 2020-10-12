@@ -33,7 +33,7 @@ public class TemplateMsgLogManageController {
     @GetMapping("/list")
     @RequiresPermissions("wx:templatemsglog:list")
     @ApiOperation(value = "列表")
-    public R list(@CookieValue String appid, @RequestParam Map<String, Object> params) {
+    public R list(@RequestParam String appid, @RequestParam Map<String, Object> params) {
         params.put("appid", appid);
         PageUtils page = templateMsgLogService.queryPage(params);
 

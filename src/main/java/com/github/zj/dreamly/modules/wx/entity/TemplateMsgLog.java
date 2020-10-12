@@ -28,9 +28,9 @@ public class TemplateMsgLog implements Serializable {
     private String appid;
     private String touser;
     private String templateId;
-    private String data;
+    private JSONArray data;
     private String url;
-    private String miniprogram;
+    private JSONObject miniprogram;
     private Date sendTime;
     private String sendResult;
 
@@ -42,8 +42,8 @@ public class TemplateMsgLog implements Serializable {
         this.touser = msg.getToUser();
         this.templateId = msg.getTemplateId();
         this.url = msg.getUrl();
-        this.miniprogram = JSONObject.parseObject(JSON.toJSONString(msg.getMiniProgram())).toJSONString();
-        this.data = JSONArray.parseArray(JSON.toJSONString(msg.getData())).toJSONString();
+        this.miniprogram = JSONObject.parseObject(JSON.toJSONString(msg.getMiniProgram()));
+        this.data = JSONArray.parseArray(JSON.toJSONString(msg.getData()));
         this.sendTime = new Date();
         this.sendResult = sendResult;
     }

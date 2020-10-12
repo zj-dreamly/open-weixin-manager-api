@@ -15,6 +15,7 @@ import java.util.Date;
 
 /**
  * 模板消息模板
+ *
  * @author Nifury
  * @date 2017-9-27
  */
@@ -30,22 +31,24 @@ public class MsgTemplate implements Serializable {
     private String name;
     private String title;
     private String content;
-    private String data;
+    private JSONArray data;
     private String url;
-    private String miniprogram;
+    private JSONObject miniprogram;
     @TableField(value = "`status`")
     private boolean status;
     private Date updateTime;
+
     public MsgTemplate() {
 
     }
-    public MsgTemplate(WxMpTemplate mpTemplate,String appid) {
+
+    public MsgTemplate(WxMpTemplate mpTemplate, String appid) {
         this.appid = appid;
-        this.templateId=mpTemplate.getTemplateId();
-        this.title=mpTemplate.getTitle();
-        this.name=mpTemplate.getTemplateId();
+        this.templateId = mpTemplate.getTemplateId();
+        this.title = mpTemplate.getTitle();
+        this.name = mpTemplate.getTemplateId();
         this.content = mpTemplate.getContent();
-        this.status=true;
+        this.status = true;
     }
 
     @Override

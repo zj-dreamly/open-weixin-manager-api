@@ -2,13 +2,13 @@ package com.github.zj.dreamly.modules.wx.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.github.zj.dreamly.modules.wx.util.WxMpServiceUtil;
 import com.github.zj.dreamly.config.TaskExcutor;
 import com.github.zj.dreamly.modules.wx.entity.MsgReplyRule;
 import com.github.zj.dreamly.modules.wx.entity.WxMsg;
 import com.github.zj.dreamly.modules.wx.service.MsgReplyRuleService;
 import com.github.zj.dreamly.modules.wx.service.MsgReplyService;
 import com.github.zj.dreamly.modules.wx.service.WxMsgService;
+import com.github.zj.dreamly.modules.wx.util.WxMpServiceUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.api.WxConsts;
@@ -65,7 +65,6 @@ public class MsgReplyServiceImpl implements MsgReplyService {
             long delay = 0;
             for (MsgReplyRule rule : rules) {
                 TaskExcutor.schedule(() -> {
-                    wxMpServiceUtil.switchoverTo(appid);
                     this.reply(appid, toUser, rule.getReplyType(), rule.getReplyContent());
                 }, delay, TimeUnit.MILLISECONDS);
                 delay += autoReplyInterval;
