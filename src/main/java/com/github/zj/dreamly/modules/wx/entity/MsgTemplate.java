@@ -30,9 +30,9 @@ public class MsgTemplate implements Serializable {
     private String name;
     private String title;
     private String content;
-    private JSONArray data;
+    private String data;
     private String url;
-    private JSONObject miniprogram;
+    private String miniprogram;
     @TableField(value = "`status`")
     private boolean status;
     private Date updateTime;

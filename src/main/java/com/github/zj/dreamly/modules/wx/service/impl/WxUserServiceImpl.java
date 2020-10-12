@@ -80,6 +80,7 @@ public class WxUserServiceImpl extends ServiceImpl<WxUserMapper, WxUser> impleme
             this.saveOrUpdate(user);
             return user;
         } catch (Exception e) {
+            e.printStackTrace();
             logger.error("更新用户信息失败,openid:{}", openid);
         }
         return null;
