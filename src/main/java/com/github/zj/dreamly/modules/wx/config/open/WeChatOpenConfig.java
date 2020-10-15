@@ -8,6 +8,8 @@ import com.github.zj.dreamly.modules.wx.service.WxAccountService;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import me.chanjar.weixin.open.api.WxOpenComponentService;
+import me.chanjar.weixin.open.api.WxOpenService;
 import me.chanjar.weixin.open.api.impl.WxOpenComponentServiceImpl;
 import me.chanjar.weixin.open.api.impl.WxOpenInMemoryConfigStorage;
 import me.chanjar.weixin.open.api.impl.WxOpenServiceImpl;
@@ -34,12 +36,12 @@ public class WeChatOpenConfig {
     /**
      * 微信开放平台服务类
      *
-     * @return {@link WxOpenComponentServiceImpl}
+     * @return {@link WxOpenComponentService}
      */
     @Bean
     @SneakyThrows
-    public WxOpenComponentServiceImpl wxOpenComponentServiceImpl() {
-        WxOpenServiceImpl wxOpenServiceImpl = new WxOpenServiceImpl();
+    public WxOpenComponentService wxOpenComponentService() {
+        WxOpenService wxOpenService = new WxOpenServiceImpl();
 
         final SysConfigEntity wechatOpenComponentAppId = sysConfigService.getSysConfig("wechat.open.componentAppId");
         final SysConfigEntity wechatOpenComponentSecret = sysConfigService.getSysConfig("wechat.open.ComponentSecret");
@@ -51,7 +53,7 @@ public class WeChatOpenConfig {
         memoryConfigStorage.setComponentAppSecret(wechatOpenComponentSecret.getParamValue());
         memoryConfigStorage.setComponentToken(wechatOpenComponentToken.getParamValue());
         memoryConfigStorage.setComponentAesKey(wechatComponentAesKey.getParamValue());
-        wxOpenServiceImpl.setWxOpenConfigStorage(memoryConfigStorage);
+        wxOpenService.setWxOpenConfigStorage(memoryConfigStorage);
 
         // 设置授权公众号的refresh_token
         final List<WxAccount> accountList = wxAccountService.listByType(MpAuthorizeType.OPEN);
@@ -59,9 +61,9 @@ public class WeChatOpenConfig {
             memoryConfigStorage.setAuthorizerRefreshToken(wxAccount.getAppid(),
                     wxAccount.getRefreshToken());
         }
-        // 设置10分钟推送一次的ticket，防止项目重启，内存中的ticket失效，需要在推送的回调接口中更新
+        // 设置10分钟推送一次的ticket，防止项目重启，内存中的ticket失效，需要在推送的回调接口中更新, 但是项目重启间隔超过了10分钟，也会失效
         final SysConfigEntity sysConfig = sysConfigService.getSysConfig("wechat.open.componentVerifyTicket");
         memoryConfigStorage.setComponentVerifyTicket(sysConfig.getParamValue());
-        return new WxOpenComponentServiceImpl(wxOpenServiceImpl);
+        return new WxOpenComponentServiceImpl(wxOpenService);
     }
 }
