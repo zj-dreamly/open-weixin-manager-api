@@ -9,9 +9,13 @@ import com.github.zj.dreamly.modules.wx.enums.ArticleTypeEnum;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author chzn
+ */
 public interface ArticleService extends IService<Article> {
     /**
      * 分页查询用户数据
+     *
      * @param params 查询参数
      * @return PageUtils 分页结果
      */
@@ -20,15 +24,15 @@ public interface ArticleService extends IService<Article> {
     /**
      * 查询文章详情，每次查询后增加点击次数
      *
-     * @param id
-     * @return
+     * @param id id
+     * @return {@link Article}
      */
     Article findById(int id);
 
     /**
      * 添加或编辑文章,同名文章不可重复添加
      *
-     * @param article
+     * @param article {@link Article}
      */
 
     @Override
@@ -37,28 +41,28 @@ public interface ArticleService extends IService<Article> {
     /**
      * 按条件分页查询
      *
-     * @param title
-     * @param page
-     * @return
+     * @param title 标题
+     * @param page  分页参数
+     * @return {@link Article}
      */
     IPage<Article> getArticles(String title, int page);
 
     /**
      * 查看目录，不返回文章详情字段
      *
-     * @param articleType
-     * @param category
-     * @return
+     * @param articleType 文章类型
+     * @param category    分类
+     * @return {@link Article}
      */
     List<Article> selectCategory(ArticleTypeEnum articleType, String category);
 
     /**
      * 文章查找，不返回文章详情字段
      *
-     * @param articleType
-     * @param category
-     * @param keywords
-     * @return
+     * @param articleType 文章类型
+     * @param category    分类
+     * @param keywords    关键字
+     * @return {@link Article}
      */
     List<Article> search(ArticleTypeEnum articleType, String category, String keywords);
 }
