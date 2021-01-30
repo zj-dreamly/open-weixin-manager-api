@@ -161,7 +161,7 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<properties>
-				<profile.active>dev</profile.active>
+				<profile.active>prod</profile.active>
 			</properties>
 		</profile>
 		<profile>
